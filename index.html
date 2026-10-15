@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cancionero Iglesia Betel</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1C2738">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Betel">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Courier+Prime:wght@400;700&family=IBM+Plex+Mono:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Roboto+Mono:wght@400;700&family=Space+Mono:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --night:#1C2738;      /* cielo de Betel: cabecera y botones */
+    --night-2:#26344A;
+    --gold:#C29B45;       /* la luz de la escalera: solo acentos */
+    --gold-soft:#E6D3A3;
+    --wine:#8A2D3A;       /* acordes */
+    --ink:#22262E;        /* texto */
+    --muted:#5F6878;
+    --paper:#F4F5F2;      /* fondo */
+    --card:#FFFFFF;
+    --line:#DCDFE3;
+    --line-soft:#ECEEF0;
+    --warn:#9A4A12;
+    --danger:#A1312C;
+    --radius-lg:14px;
+    --radius:8px;
+    --display:'Cinzel', 'Trajan Pro', Georgia, serif;
+    --ui:'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --sheet:'Courier Prime', 'Courier New', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{font-family:var(--ui);font-size:15px;line-height:1.5;background:var(--paper);color:var(--ink);margin:0;}
+
+  /* ---------- Cabecera: la columna de piedra bajo el cielo nocturno ---------- */
+  .masthead{position:relative;overflow:hidden;background:var(--night);color:#F2EFE6;padding:56px 20px 64px;text-align:center;}
+  .masthead .stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .masthead .ladder{position:absolute;left:50%;top:0;bottom:0;width:120px;transform:translateX(-50%);
+    background:linear-gradient(to bottom, rgba(230,211,163,0.16), rgba(230,211,163,0) 85%);
+    clip-path:polygon(38% 0, 62% 0, 100% 100%, 0 100%);pointer-events:none;}
+  .masthead .inner{position:relative;}
+  .brand{font-family:var(--display);font-weight:600;font-size:clamp(56px, 12vw, 104px);letter-spacing:0.16em;
+    line-height:1;margin:0 0 0 0.16em;color:#F5F1E4;text-shadow:0 1px 0 rgba(0,0,0,0.25);}
+  .brand-rule{width:64px;height:1px;background:var(--gold);margin:20px auto 16px;border:0;}
+  .brand-sub{font-family:var(--display);font-size:15px;letter-spacing:0.12em;color:var(--gold-soft);margin:0;}
+  .brand-pre{font-family:var(--display);font-size:clamp(16px, 2.6vw, 20px);letter-spacing:0.3em;color:var(--gold-soft);margin:0 0 10px 0.3em;}
+  .brand-place{font-size:15px;letter-spacing:0.04em;color:#B9C0CC;margin:14px 0 0;}
+
+  /* ---------- Página ---------- */
+  .container{max-width:960px;margin:-28px auto 0;padding:0 16px 64px;position:relative;}
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-lg);padding:26px 28px 28px;margin-bottom:22px;}
+  .step-head{display:flex;align-items:baseline;gap:16px;margin:0 0 6px;}
+  .step-num{font-family:var(--display);font-size:22px;font-weight:700;color:var(--gold);min-width:1.6em;}
+  .step-head h2{font-size:20px;font-weight:700;margin:0;color:var(--night);letter-spacing:-0.01em;}
+  .step-lead{color:var(--muted);margin:0 0 18px;font-size:14px;}
+  h3.subhead{font-size:15px;font-weight:700;color:var(--night);margin:28px 0 10px;}
+
+  /* ---------- Formularios ---------- */
+  label{display:block;margin:14px 0 6px;font-size:13px;font-weight:600;color:var(--ink);}
+  textarea, input[type=text], select{font-family:inherit;font-size:14px;color:var(--ink);background:#FBFBFA;
+    border:1px solid var(--line);border-radius:var(--radius);transition:border-color .15s, box-shadow .15s;}
+  textarea{width:100%;min-height:140px;padding:12px;font-family:var(--sheet);font-size:13px;line-height:1.45;resize:vertical;}
+  input[type=text]{width:100%;padding:10px 12px;}
+  select{padding:9px 10px;}
+  textarea:focus, input[type=text]:focus, select:focus{outline:none;border-color:var(--night-2);box-shadow:0 0 0 3px rgba(38,52,74,0.15);background:#fff;}
+  .hint{font-size:13px;color:var(--muted);margin:14px 0 8px;}
+  .warn{color:var(--warn);font-size:13.5px;margin:8px 0;padding:8px 12px;background:#FBF3EA;border-radius:var(--radius);}
+  .row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;}
+  .row > div{flex:1;min-width:160px;}
+
+  /* Zona para soltar el PDF */
+  .dropzone{display:flex;align-items:center;gap:16px;border:1.5px dashed #B8BEC8;border-radius:var(--radius-lg);
+    padding:18px 20px;cursor:pointer;background:#FAFBFA;transition:border-color .15s, background .15s;}
+  .dropzone:hover, .dropzone:focus-within{border-color:var(--night-2);background:#F5F7F9;}
+  .dropzone svg{flex:none;color:var(--night-2);}
+  .dropzone strong{display:block;font-size:15px;color:var(--night);}
+  .dropzone span{font-size:13px;color:var(--muted);}
+  .dropzone input{position:absolute;opacity:0;width:1px;height:1px;}
+  .loading{color:var(--night-2);font-size:13.5px;margin-top:10px;min-height:1px;}
+
+  /* ---------- Botones ---------- */
+  button{font-family:inherit;background:var(--night);color:#fff;border:1px solid var(--night);padding:10px 18px;border-radius:var(--radius);
+    font-weight:600;cursor:pointer;font-size:14px;margin-top:12px;margin-right:8px;transition:background .15s, border-color .15s;}
+  button:hover{background:var(--night-2);border-color:var(--night-2);}
+  button:focus-visible, .chip:focus-visible, summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+  button.secondary{background:#fff;color:var(--night);border-color:#C3C8D0;}
+  button.secondary:hover{background:#F2F4F6;border-color:var(--night-2);}
+  button.danger{background:transparent;color:var(--danger);border:1px solid transparent;padding:6px 10px;font-size:13px;margin:0;}
+  button.danger:hover{background:#FBEDEC;border-color:#F0CFCC;}
+  button.small{padding:6px 11px;font-size:13px;margin:0;}
+  button.primary-lg{padding:12px 22px;font-size:15px;}
+
+  /* ---------- Cancioneros guardados ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 8px 6px 14px;font-size:13.5px;display:flex;align-items:center;gap:8px;cursor:pointer;}
+  .chip:hover{border-color:#B8BEC8;}
+  .chip.active{background:var(--night);color:#fff;border-color:var(--night);}
+  .chip .count{color:var(--muted);font-variant-numeric:tabular-nums;}
+  .chip.active .count{color:var(--gold-soft);}
+  .chip .x{color:var(--muted);font-weight:700;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;}
+  .chip.active .x{color:#C9CFD8;}
+  .chip .x:hover{color:var(--danger);background:#FBEDEC;}
+  .active-banner{background:#F2F4F7;border-radius:var(--radius);padding:10px 14px;font-size:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+  .ok{font-size:14.5px;margin:16px 0 4px;}
+  .ok b{color:var(--night);}
+
+  details{margin-top:14px;}
+  details summary{cursor:pointer;color:var(--night-2);font-weight:600;font-size:14px;}
+  details.panel{border-top:1px solid var(--line-soft);padding-top:14px;margin-top:22px;}
+  .songIndexList{font-size:13px;color:var(--muted);margin-top:8px;max-height:180px;overflow:auto;columns:2 240px;column-gap:24px;}
+
+  /* ---------- Tu set ---------- */
+  .songRow{border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px;background:#fff;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+  .songRow .info{flex:1;min-width:200px;font-size:14px;}
+  .songRow .title{font-weight:700;color:var(--night);}
+  .songRow .num{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;margin-right:6px;}
+  .songRow .author{color:var(--muted);}
+  .songRow .meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:8px;font-size:13.5px;color:var(--muted);}
+  .songRow .meta b{color:var(--wine);font-family:var(--sheet);}
+  .songRow select{padding:5px 8px;font-size:13.5px;}
+  .reorderCol{display:flex;flex-direction:column;gap:4px;}
+  .reorderCol button{margin:0;padding:5px 8px;display:flex;align-items:center;justify-content:center;}
+  .reorderCol button:disabled{opacity:0.3;cursor:default;}
+  .sectionTag{display:inline-block;width:auto !important;min-width:110px;max-width:180px;padding:4px 10px !important;border-radius:999px !important;
+    background:#F2F4F7 !important;color:var(--night-2);font-size:13px !important;font-weight:600;}
+  .libRow{border-bottom:1px solid var(--line-soft);padding:8px 2px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+  .libRow .title{font-size:14px;font-weight:600;}
+  .libRow button{margin-left:6px;}
+  .empty-hint{font-size:13.5px;color:var(--muted);padding:6px 0;}
+  #step2, #step3{display:none;}
+
+  /* ---------- Hoja del cancionero (pantalla e impresión) ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;}
+  .toolbar button{margin:0;}
+  .toolbar .notation{margin-left:auto;}
+  .toolbar label{margin-top:0;}
+  /* Barra de estilo de la hoja */
+  .style-bar{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 20px;margin-top:18px;padding:14px 16px;background:#F5F6F8;border:1px solid var(--line-soft);border-radius:var(--radius-lg);}
+  .style-bar label{margin:0 0 6px;font-size:12.5px;color:var(--muted);}
+  .style-bar .field{display:flex;flex-direction:column;}
+  .style-bar select{min-width:170px;}
+  .size-ctl{display:flex;align-items:center;gap:10px;height:38px;}
+  .size-ctl input[type=range]{width:130px;accent-color:var(--night);}
+  .size-ctl output{font-variant-numeric:tabular-nums;font-size:13.5px;min-width:3.2em;color:var(--ink);}
+  .color-ctl{display:flex;align-items:center;gap:6px;height:38px;}
+  .swatch{width:24px;height:24px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);padding:0;margin:0;cursor:pointer;}
+  .swatch:hover{box-shadow:0 0 0 1px var(--night-2);}
+  .swatch[aria-pressed="true"]{box-shadow:0 0 0 2px var(--night);}
+  .color-ctl input[type=color]{width:30px;height:30px;padding:0;border:1px solid var(--line);border-radius:50%;background:none;cursor:pointer;overflow:hidden;}
+  .color-ctl input[type=color]::-webkit-color-swatch-wrapper{padding:0;}
+  .color-ctl input[type=color]::-webkit-color-swatch{border:none;border-radius:50%;}
+  .style-bar .reset{margin:0 0 2px auto;}
+  #preview{margin-top:26px;}
+  #preview:empty{display:none;}
+  .sheet{background:#fff;border:1px solid var(--line);border-radius:4px;padding:40px 36px;max-width:calc(680px + 72px);margin:0 auto;box-shadow:0 1px 0 var(--line-soft), 0 12px 30px -18px rgba(28,39,56,0.25);}
+  .sheet-head{text-align:center;padding-bottom:22px;margin-bottom:6px;border-bottom:1px solid var(--line);}
+  .sheet-brand{font-family:var(--display);font-weight:600;font-size:34px;letter-spacing:0.16em;color:var(--night);margin:0 0 0 0.16em;}
+  .sheet-sub{font-size:13px;color:var(--muted);margin:4px 0 0;}
+  .section-title{display:flex;align-items:center;gap:14px;font-family:var(--display);font-size:15px;font-weight:600;letter-spacing:0.1em;color:var(--gold);margin:34px 0 18px;}
+  .section-title::before, .section-title::after{content:"";flex:1;height:1px;background:var(--gold-soft);}
+  .song-block{margin-bottom:30px;break-inside:avoid;page-break-inside:avoid;}
+  .song-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:10px;}
+  .song-head .n{font-family:var(--display);font-weight:700;font-size:17px;color:var(--gold);font-variant-numeric:tabular-nums;min-width:1.8em;}
+  .song-head h3{font-size:18px;font-weight:700;margin:0;color:var(--night);line-height:1.25;}
+  .song-head .by{font-size:13.5px;color:var(--muted);font-weight:500;}
+  .song-head .key{margin-left:auto;font-family:var(--song-font, var(--sheet));font-size:13px;color:var(--chord-color, var(--wine));white-space:nowrap;}
+  .key-note{font-size:12.5px;color:var(--muted);font-style:italic;margin:-4px 0 8px;}
+  pre{font-family:var(--song-font, var(--sheet));font-size:var(--song-size, 14px);white-space:pre;line-height:1.38;margin:0;color:var(--ink);overflow:hidden;}
+  pre .chord{color:var(--chord-color, var(--wine));font-weight:700;}
+  pre .lyric{color:var(--lyric-color, var(--ink));}
+
+  @media (max-width:640px){
+    .masthead{padding:40px 16px 52px;}
+    section{padding:20px 18px 22px;}
+    .sheet{padding:24px 16px;}
+    .toolbar .notation{margin-left:0;}
+  }
+  @media (prefers-reduced-motion:reduce){ *{transition:none !important;scroll-behavior:auto !important;} }
+
+  @media print{
+    @page{margin:16mm 14mm;}
+    body{background:#fff;}
+    .masthead, section#step1, section#step2, section#savedBooks, .no-print{display:none !important;}
+    .container{max-width:none;margin:0;padding:0;}
+    #step3{display:block !important;border:none;padding:0;margin:0;}
+    #step3 > .step-head, #step3 > .step-lead, #step3 > .toolbar, #step3 > .style-bar{display:none !important;}
+    #preview{margin:0;}
+    .sheet{border:none;box-shadow:none;padding:0;}
+    .song-head{break-after:avoid;page-break-after:avoid;}
+    .section-title{break-after:avoid;page-break-after:avoid;}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
+</style>
+</head>
+<body>
+<header class="masthead">
+  <svg class="stars" aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1000 300">
+    <g fill="#E6D3A3">
+      <circle cx="82" cy="46" r="1.2" opacity=".7"/><circle cx="164" cy="128" r=".9" opacity=".5"/>
+      <circle cx="241" cy="62" r="1.4" opacity=".8"/><circle cx="318" cy="212" r=".8" opacity=".4"/>
+      <circle cx="372" cy="34" r="1" opacity=".6"/><circle cx="118" cy="236" r="1.1" opacity=".5"/>
+      <circle cx="626" cy="52" r="1.1" opacity=".7"/><circle cx="702" cy="168" r=".9" opacity=".5"/>
+      <circle cx="768" cy="88" r="1.5" opacity=".8"/><circle cx="846" cy="30" r=".9" opacity=".5"/>
+      <circle cx="902" cy="196" r="1.2" opacity=".6"/><circle cx="954" cy="92" r=".8" opacity=".4"/>
+      <circle cx="560" cy="248" r=".8" opacity=".4"/><circle cx="430" cy="142" r=".7" opacity=".35"/>
+      <circle cx="40" cy="160" r=".8" opacity=".4"/><circle cx="660" cy="270" r="1" opacity=".5"/>
+    </g>
+  </svg>
+  <div class="ladder" aria-hidden="true"></div>
+  <div class="inner">
+    <p class="brand-pre">Iglesia</p>
+    <h1 class="brand">BETEL</h1>
+    <p class="brand-place">Villa Alemana</p>
+    <hr class="brand-rule">
+    <p class="brand-sub">Cancionero de alabanzas y adoración</p>
+  </div>
+</header>
+
+<main class="container">
+  <section id="savedBooks" style="display:none">
+    <div class="step-head"><h2>Mis cancioneros guardados</h2></div>
+    <p class="step-lead">Elige uno para usarlo sin volver a subir el PDF.</p>
+    <div id="booksList" class="chips"></div>
+  </section>
+
+  <section id="step1">
+    <div class="step-head"><span class="step-num">I</span><h2>Sube el cancionero</h2></div>
+    <p class="step-lead">El PDF se lee en tu computador; no se envía a ningún lado.</p>
+    <div id="activeBookBanner"></div>
+    <label class="dropzone" for="pdfInput">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 17v-6"/><path d="M9.5 13.5 12 11l2.5 2.5"/></svg>
+      <div><strong>Elegir el PDF del cancionero</strong><span>Por ejemplo, «alabanza 2021.pdf»</span></div>
+      <input type="file" id="pdfInput" accept="application/pdf" onchange="handlePdfUpload(event)">
+    </label>
+    <div id="pdfStatus" class="loading"></div>
+    <p class="hint">También puedes pegar o corregir el texto aquí, si alguna línea quedó desordenada.</p>
+    <textarea id="rawText" placeholder="El texto del PDF aparecerá aquí."></textarea>
+    <button onclick="parseSongbook()">Buscar canciones</button>
+    <div id="parseResult"></div>
+  </section>
+
+  <section id="step2">
+    <div class="step-head"><span class="step-num">II</span><h2>Arma tu set</h2></div>
+    <p class="step-lead">Escribe los números de las canciones en el orden en que se cantarán.</p>
+
+    <div class="row">
+      <div style="flex:2">
+        <label for="songNumbers">Números de canciones</label>
+        <input type="text" id="songNumbers" placeholder="Ej: 110 - 45 - 50" onkeydown="if(event.key==='Enter')addByNumbers()">
+      </div>
+      <div>
+        <label for="globalKey">Tono para todas</label>
+        <select id="globalKey" style="width:100%">
+          <option value="">No transponer</option>
+        </select>
+      </div>
+      <div>
+        <label for="sectionInput">Sección</label>
+        <input type="text" id="sectionInput" list="sectionOptions" value="General">
+        <datalist id="sectionOptions"></datalist>
+      </div>
+    </div>
+    <button onclick="addByNumbers()">Añadir al set</button>
+
+    <details class="panel">
+      <summary>Añadir una canción sin acordes</summary>
+      <label for="customTitle">Título</label>
+      <input type="text" id="customTitle" placeholder="Ej: Cumpleaños feliz">
+      <label for="customLyrics">Letra, una línea por renglón</label>
+      <textarea id="customLyrics" style="min-height:90px"></textarea>
+      <button onclick="addCustomSong()">Añadir al set</button>
+
+      <h3 class="subhead">Tus canciones sin acordes</h3>
+      <div id="customLibraryList"></div>
+    </details>
+
+    <h3 class="subhead">Tu set, en este orden</h3>
+    <div id="songList"></div>
+  </section>
+
+  <section id="step3">
+    <div class="step-head"><span class="step-num">III</span><h2>Cancionero listo</h2></div>
+    <p class="step-lead">Revisa la vista previa y guárdalo como PDF para imprimir o compartir.</p>
+    <div class="toolbar">
+      <button class="primary-lg" onclick="generatePreview()">Generar cancionero</button>
+      <button class="secondary primary-lg" onclick="generatePreview(); window.print()">Imprimir o guardar PDF</button>
+      <div class="notation">
+        <label for="displayNotationSelect">Notación</label>
+        <select id="displayNotationSelect" onchange="window.displayNotation=this.value; generatePreview()">
+          <option value="latin">Latina (Do Re Mi)</option>
+          <option value="american">Americana (C D E)</option>
+        </select>
+      </div>
+    </div>
+    <div class="style-bar" id="styleBar">
+      <div class="field">
+        <label for="songFont">Fuente de las canciones</label>
+        <select id="songFont" onchange="setSheetStyle('font', this.value)">
+          <option value="'Courier Prime', 'Courier New', monospace">Courier Prime (máquina de escribir)</option>
+          <option value="'IBM Plex Mono', monospace">IBM Plex Mono (limpia)</option>
+          <option value="'Roboto Mono', monospace">Roboto Mono (redonda)</option>
+          <option value="'JetBrains Mono', monospace">JetBrains Mono (alta, muy legible)</option>
+          <option value="'Space Mono', monospace">Space Mono (con carácter)</option>
+          <option value="'Courier New', Courier, monospace">Courier New (clásica)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="songSize">Tamaño</label>
+        <div class="size-ctl">
+          <input type="range" id="songSize" min="10" max="22" step="0.5" oninput="setSheetStyle('size', this.value)">
+          <output id="songSizeOut"></output>
+        </div>
+      </div>
+      <div class="field">
+        <label>Color de la letra</label>
+        <div class="color-ctl" id="lyricColors"></div>
+      </div>
+      <div class="field">
+        <label>Color de los acordes</label>
+        <div class="color-ctl" id="chordColors"></div>
+      </div>
+      <button class="secondary small reset" onclick="resetSheetStyle()">Restablecer</button>
+    </div>
+    <p class="hint no-print" style="margin-top:8px">Solo se ofrecen fuentes de ancho fijo: con otras, los acordes se corren de su sílaba.</p>
+    <div id="preview"></div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+const NOTES_SHARP  = ['Do','Do#','Re','Re#','Mi','Fa','Fa#','Sol','Sol#','La','La#','Si'];
+const NOTES_FLAT   = ['Do','Reb','Re','Mib','Mi','Fa','Solb','Sol','Lab','La','Sib','Si'];
+const NOTES_COMMON = ['Do','Do#','Re','Mib','Mi','Fa','Fa#','Sol','Sol#','La','Sib','Si'];
+const NOTES_AMERICAN = ['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+
+// ROOTS matches both latin (Do, Re...) and american (C, D...) note names.
+// Order matters: longer/more-specific tokens (Do, Re, Mi, Fa, Sol, La, Si)
+// before the single-letter american ones so the regex doesn't split them.
+const ROOTS = 'Do|Re|Mi|Fa|Sol|La|Si|C|D|E|F|G|A|B';
+const SUFFIXES = '(?:m(?!aj)|maj7|maj9|maj|dim7|dim|aug|sus4|sus2|sus|add9|add2|6|7|9|11|13)*';
+const CHORD_FULL_RE = new RegExp('^('+ROOTS+')(#|b)?('+SUFFIXES+')$');
+const CHORD_GLOBAL_RE = new RegExp('('+ROOTS+')(#|b)?('+SUFFIXES+')','g');
+
+window.displayNotation = 'latin'; // 'latin' | 'american'
+
+const BOOKS_KEY = 'cancionero_books_v1';
+const LIBRARY_KEY = 'cancionero_customLibrary_v1';
+
+window.parsedSongs = [];
+window.selection = [];
+window.currentBookId = null;
+
+function noteIndex(note){
+  let i = NOTES_SHARP.indexOf(note);
+  if(i!==-1) return i;
+  i = NOTES_FLAT.indexOf(note);
+  if(i!==-1) return i;
+  i = NOTES_AMERICAN.indexOf(note);
+  return i;
+}
+
+function notesForDisplay(notation){
+  return notation==='american' ? NOTES_AMERICAN : NOTES_COMMON;
+}
+
+function transposeChordMatch(root, acc, suffix, semitones, notation){
+  const idx = noteIndex(root+(acc||''));
+  if(idx===-1) return root+(acc||'')+suffix;
+  const newIdx = ((idx+semitones)%12+12)%12;
+  return notesForDisplay(notation)[newIdx]+suffix;
+}
+
+function renotateChordMatch(root, acc, suffix, notation){
+  const idx = noteIndex(root+(acc||''));
+  if(idx===-1) return root+(acc||'')+suffix;
+  return notesForDisplay(notation)[idx]+suffix;
+}
+
+// Replaces each chord keeping every chord at its original column: if the new chord
+// is longer/shorter, the spaces after it shrink/grow so the following chords stay
+// above the same syllable (always at least one space between chords).
+// Chords found in a line, as whole words only: the "C" of "[Coro]", the "F" of
+// "[Fuego]" or the "D" of "Dios" are letters of a word, not chords, and must be
+// left alone (otherwise "Coro" turns into "Dooro" when shown in latin notation).
+const WORD_CHAR = /[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9]/;
+function chordsIn(line){
+  const found = [];
+  line.replace(CHORD_GLOBAL_RE,(m,root,acc,suffix,offset)=>{
+    const before = line[offset-1], after = line[offset+m.length];
+    if(m && !(before && WORD_CHAR.test(before)) && !(after && WORD_CHAR.test(after))){
+      found.push({m, root, acc, suffix, offset});
+    }
+    return m;
+  });
+  return found;
+}
+
+function transposeLine(line, semitones, notation){
+  if(!semitones && !notation) return line;
+  let out = '';
+  let last = 0;
+  chordsIn(line).forEach(({m,root,acc,suffix,offset})=>{
+    let gap = line.slice(last, offset);
+    if(/^ +$/.test(gap)){
+      const drift = out.length - last; // >0 previous chord grew, <0 it shrank
+      gap = ' '.repeat(Math.max(1, gap.length - drift));
+    }
+    out += gap;
+    out += semitones
+      ? transposeChordMatch(root,acc,suffix,semitones,notation)
+      : renotateChordMatch(root,acc,suffix,notation);
+    last = offset + m.length;
+  });
+  return out + line.slice(last);
+}
+
+// A line counts as a "chord line" only if EVERY token in it (ignoring bracket/paren
+// labels and separator symbols) is itself a valid chord. This is what prevents
+// words like "Si", "La", "Mi" (common Spanish words) from being mistaken for chords.
+function isChordLine(line){
+  const stripped = line.replace(/\[[^\]]*\]|\([^)]*\)/g,' ');
+  const tokens = stripped.trim().split(/\s+/).filter(Boolean);
+  if(tokens.length===0) return true;
+  for(const t of tokens){
+    if(/^[\/\-–—→]+$/.test(t)) continue;
+    if(/^x\d+$/i.test(t)) continue;
+    if(/^\.{2,}$/.test(t)) continue;
+    if(/^:+$/.test(t)) continue;
+    const parts = t.split(/[\/\-–—→]+/).filter(Boolean);
+    if(parts.length===0) continue;
+    if(!parts.every(p=>CHORD_FULL_RE.test(p))) return false;
+  }
+  return true;
+}
+
+function isSkipToken(t){
+  if(/^\[.*\]:?$/.test(t)) return true;
+  if(/^\(.*\)$/.test(t)) return true;
+  if(/^[\/\-–—→]+$/.test(t)) return true;
+  if(/^x\d+$/i.test(t)) return true;
+  if(/^\.{2,}$/.test(t)) return true;
+  if(/^:+$/.test(t)) return true;
+  return false;
+}
+
+// PDF text extraction sometimes splits a chord across a stray space
+// (e.g. "S i" -> "Si", "L am" -> "Lam", "Mi m" -> "Mim", "R em" -> "Rem").
+// This rejoins those fragments. It only ever merges tokens when the merged
+// result is a strictly valid chord, so normal lyric words are never touched.
+function repairLineTokens(line){
+  const leading = line.match(/^\s*/)[0];
+  const rest = line.slice(leading.length);
+  // split keeping the whitespace runs so untouched spacing survives verbatim
+  const parts = rest.split(/(\s+)/);
+  const raw = []; // {text, sep} - sep is the whitespace that followed this token
+  for(let k=0;k<parts.length;k+=2) raw.push({text:parts[k], sep:parts[k+1]||''});
+
+  const out = [];
+  let i = 0;
+  while(i < raw.length){
+    const tok = raw[i].text;
+    if(tok===''){ i++; continue; }
+    if(CHORD_FULL_RE.test(tok) || isSkipToken(tok)){ out.push(raw[i]); i++; continue; }
+    if(/^[A-Z][a-z]{0,2}$/.test(tok) && i+1<raw.length){
+      const merged2 = tok+raw[i+1].text;
+      if(CHORD_FULL_RE.test(merged2)){ out.push({text:merged2, sep:raw[i].sep+raw[i+1].sep}); i+=2; continue; }
+      if(i+2<raw.length){
+        const merged3 = tok+raw[i+1].text+raw[i+2].text;
+        if(CHORD_FULL_RE.test(merged3)){ out.push({text:merged3, sep:raw[i].sep+raw[i+1].sep+raw[i+2].sep}); i+=3; continue; }
+      }
+    }
+    out.push(raw[i]); i++;
+  }
+  return leading + out.map(t=>t.text+t.sep).join('');
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ---------- Persistence: saved songbooks ----------
+function loadBooks(){
+  try{ return JSON.parse(localStorage.getItem(BOOKS_KEY)) || []; }catch(e){ return []; }
+}
+
+function persistBooks(books){
+  localStorage.setItem(BOOKS_KEY, JSON.stringify(books));
+}
+
+function saveCurrentAsBook(name){
+  const books = loadBooks();
+  const id = 'b' + Date.now();
+  books.push({id, name, songs: window.parsedSongs, savedAt: new Date().toISOString()});
+  persistBooks(books);
+  window.currentBookId = id;
+  renderBooksList();
+}
+
+function deleteBook(id, evt){
+  if(evt) evt.stopPropagation();
+  const books = loadBooks().filter(b=>b.id!==id);
+  persistBooks(books);
+  if(window.currentBookId===id) window.currentBookId = null;
+  renderBooksList();
+  renderActiveBookBanner();
+}
+
+function activateBook(id){
+  const book = loadBooks().find(b=>b.id===id);
+  if(!book) return;
+  window.parsedSongs = book.songs;
+  window.currentBookId = id;
+  finishParse(`<p class="ok">Cancionero <b>${escapeHtml(book.name)}</b> cargado, ${book.songs.length} canciones.</p>`);
+  renderBooksList();
+  renderActiveBookBanner();
+}
+
+function renderBooksList(){
+  const books = loadBooks();
+  const wrap = document.getElementById('savedBooks');
+  wrap.style.display = books.length ? 'block' : 'none';
+  document.getElementById('booksList').innerHTML = books.map(b=>`
+    <div class="chip ${b.id===window.currentBookId?'active':''}" onclick="activateBook('${b.id}')">
+      ${escapeHtml(b.name)} <span class="count">${b.songs.length}</span>
+      <span class="x" title="Borrar cancionero" onclick="deleteBook('${b.id}', event)">✕</span>
+    </div>
+  `).join('');
+}
+
+function renderActiveBookBanner(){
+  const el = document.getElementById('activeBookBanner');
+  if(!window.currentBookId){ el.innerHTML=''; return; }
+  const book = loadBooks().find(b=>b.id===window.currentBookId);
+  if(!book){ el.innerHTML=''; return; }
+  el.innerHTML = `<div class="active-banner">
+    <span>Usando <b>${escapeHtml(book.name)}</b></span>
+    <button class="small secondary" onclick="document.getElementById('pdfInput').click()">Subir otro PDF</button>
+  </div>`;
+}
+
+// ---------- Persistence: custom song library ----------
+function loadCustomLibrary(){
+  try{ return JSON.parse(localStorage.getItem(LIBRARY_KEY)) || []; }catch(e){ return []; }
+}
+
+function persistCustomLibrary(lib){
+  localStorage.setItem(LIBRARY_KEY, JSON.stringify(lib));
+}
+
+function saveToCustomLibrary(title, lyrics){
+  const lib = loadCustomLibrary();
+  const exists = lib.some(s=>s.title===title && s.lyrics===lyrics);
+  if(!exists){
+    lib.push({id:'c'+Date.now(), title, lyrics});
+    persistCustomLibrary(lib);
+  }
+  renderCustomLibrary();
+}
+
+function addFromLibrary(id){
+  const lib = loadCustomLibrary();
+  const song = lib.find(s=>s.id===id);
+  if(!song) return;
+  const section = document.getElementById('sectionInput').value.trim() || 'General';
+  window.selection.push({custom:true, title: song.title, lines: song.lyrics.split(/\r?\n/), section});
+  renderSelectionList();
+}
+
+function deleteFromLibrary(id, evt){
+  if(evt) evt.stopPropagation();
+  persistCustomLibrary(loadCustomLibrary().filter(s=>s.id!==id));
+  renderCustomLibrary();
+}
+
+function renderCustomLibrary(){
+  const lib = loadCustomLibrary();
+  const wrap = document.getElementById('customLibraryList');
+  if(!lib.length){
+    wrap.innerHTML = '<div class="empty-hint">Aún no tienes canciones guardadas aquí.</div>';
+    return;
+  }
+  wrap.innerHTML = lib.map(s=>`
+    <div class="libRow">
+      <span class="title">${escapeHtml(s.title)}</span>
+      <div>
+        <button class="small secondary" onclick="addFromLibrary('${s.id}')">Añadir al set</button>
+        <button class="small danger" onclick="deleteFromLibrary('${s.id}', event)">Borrar</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ---------- PDF upload (client-side extraction with line reconstruction) ----------
+async function handlePdfUpload(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const status = document.getElementById('pdfStatus');
+  status.textContent = '⏳ Leyendo "'+file.name+'"...';
+  try{
+    const buffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({data: buffer}).promise;
+    let fullText = '';
+    for(let p=1; p<=pdf.numPages; p++){
+      status.textContent = `⏳ Procesando página ${p} de ${pdf.numPages}...`;
+      const page = await pdf.getPage(p);
+      const content = await page.getTextContent();
+      fullText += extractPageLines(content) + '\n';
+    }
+    document.getElementById('rawText').value = fullText;
+    status.textContent = 'PDF leído. Revisa el texto si quieres y pulsa «Buscar canciones».';
+    window.pendingBookName = file.name.replace(/\.pdf$/i,'');
+    parseSongbook();
+  }catch(err){
+    status.textContent = 'No se pudo leer el PDF (' + err.message + '). Pega el texto a mano en el recuadro de abajo.';
+  }
+}
+
+// Reconstructs lines from PDF text items using their position.
+// pdf.js doesn't give line breaks or spacing, and the PDF uses a proportional font
+// while the songbook is shown in monospace. So:
+//  - lyric lines are rebuilt keeping the natural spacing between words, remembering
+//    the x position of every character;
+//  - each chord is then placed at the column of the lyric character that sits right
+//    under it in the PDF, so it stays on the same syllable.
+// Rough Arial character widths, used to estimate where each character falls inside a
+// text item (pdf.js only gives the width of the whole item).
+function glyphWeight(ch){
+  if(ch===' ') return 0.28;
+  if(/[iljtfrIíì.,;:'!|\/()\[\]-]/.test(ch)) return 0.3;
+  if(/[mwMW]/.test(ch)) return 0.85;
+  if(/[A-ZÁÉÍÓÚÑ#]/.test(ch)) return 0.68;
+  return 0.56;
+}
+
+function charPositions(str, x, w){
+  const weights = [...str].map(glyphWeight);
+  const total = weights.reduce((a,b)=>a+b,0) || 1;
+  const xs = [];
+  let acc = 0;
+  weights.forEach(wt=>{ xs.push(x + w*acc/total); acc += wt; });
+  return xs;
+}
+
+// Plain layout: text plus the x of each character. Big gaps become several spaces.
+function layoutLine(parts, minX, charW){
+  let text = '';
+  const xs = [];
+  let prevEnd = null;
+  parts.forEach(p=>{
+    if(prevEnd === null){
+      const lead = Math.max(0, Math.round((p.x - minX) / charW));
+      for(let k=0;k<lead;k++){ text += ' '; xs.push(minX + k*charW); }
+    } else {
+      const gap = p.x - prevEnd;
+      let n = 0;
+      if(gap > 1.5*charW) n = Math.round(gap / charW);
+      else if(gap > 0.2*charW && !/\s$/.test(text) && !/^\s/.test(p.str)) n = 1;
+      for(let k=0;k<n;k++){ text += ' '; xs.push(prevEnd + gap*k/n); }
+    }
+    const cx = charPositions(p.str, p.x, p.w);
+    text += p.str;
+    xs.push(...cx);
+    prevEnd = p.x + p.w;
+  });
+  return {text: text.replace(/\t/g,' '), xs};
+}
+
+// Column in the lyric line that sits under position x.
+function columnAt(lyric, x, charW){
+  const xs = lyric.xs;
+  if(!xs.length) return Math.round(x / charW);
+  if(x >= xs[xs.length-1] + charW){
+    return xs.length + Math.round((x - xs[xs.length-1]) / charW) - 1;
+  }
+  let best = 0, bestD = Infinity;
+  for(let i=0;i<xs.length;i++){
+    const d = Math.abs(xs[i] - x);
+    if(d < bestD){ bestD = d; best = i; }
+  }
+  return best;
+}
+
+function placeChordsOverLyric(parts, lyric, charW){
+  // split every item into its individual tokens, each with its own x
+  const tokens = [];
+  parts.forEach(p=>{
+    const cx = charPositions(p.str, p.x, p.w);
+    const re = /\S+/g; let m;
+    while((m = re.exec(p.str))) tokens.push({text: m[0], x: cx[m.index]});
+  });
+  let out = '';
+  tokens.forEach(t=>{
+    let col = columnAt(lyric, t.x, charW);
+    if(out.length && col <= out.length) col = out.length + 1;
+    out += ' '.repeat(Math.max(0, col - out.length)) + t.text;
+  });
+  return out;
+}
+
+function extractPageLines(content){
+  const items = content.items
+    .filter(it => typeof it.str === 'string' && it.str.length)
+    .map(it => ({str: it.str, x: it.transform[4], y: it.transform[5], w: it.width || 0}));
+  if(!items.length) return '';
+  const widths = items
+    .filter(it => it.str.trim().length && it.w > 0)
+    .map(it => it.w / it.str.length)
+    .sort((a,b)=>a-b);
+  const charW = widths.length ? widths[Math.floor(widths.length/2)] : 5;
+  const minX = Math.min(...items.map(it=>it.x));
+  const lines = [];
+  const threshold = 3;
+  items.forEach(it=>{
+    let line = lines.find(l => Math.abs(l.y - it.y) < threshold);
+    if(!line){ line = {y: it.y, parts: []}; lines.push(line); }
+    line.parts.push(it);
+  });
+  lines.sort((a,b)=> b.y - a.y);
+  lines.forEach(l=>{
+    l.parts.sort((a,b)=>a.x-b.x);
+    l.layout = layoutLine(l.parts, minX, charW);
+    l.isChord = !!l.layout.text.trim() &&
+      isChordLine(repairLineTokens(l.layout.text)) &&
+      chordsIn(l.layout.text).length > 0;
+  });
+  return lines.map((l,i)=>{
+    const next = lines[i+1];
+    if(l.isChord && next && !next.isChord && next.layout.text.trim()
+       && (l.y - next.y) < 4*charW){
+      return placeChordsOverLyric(l.parts, next.layout, charW).trimEnd();
+    }
+    return l.layout.text.trimEnd();
+  }).join('\n');
+}
+
+// ---------- Step 1: parse ----------
+function parseSongbook(){
+  const text = document.getElementById('rawText').value;
+  const lines = text.split(/\r?\n/).map(repairLineTokens);
+  const headerRe = /^\s*(\d{1,3})\.\s*(.+)$/;
+
+  let candidates = [];
+  lines.forEach((line, idx)=>{
+    const m = line.match(headerRe);
+    if(m && !/\.{4,}/.test(m[2])) candidates.push({idx, num: parseInt(m[1],10), rest: m[2].trim()});
+  });
+
+  // Only confirm a header if a real chord line follows shortly after
+  // (this filters out the index/table of contents automatically)
+  let confirmed = [];
+  candidates.forEach(c=>{
+    for(let k=c.idx; k<Math.min(lines.length, c.idx+8); k++){
+      if(isChordLine(lines[k]) && chordsIn(lines[k]).length){
+        confirmed.push(c);
+        break;
+      }
+    }
+  });
+
+  let songs = [];
+  for(let i=0;i<confirmed.length;i++){
+    const start = confirmed[i].idx;
+    const end = (i+1<confirmed.length) ? confirmed[i+1].idx : lines.length;
+    let title = confirmed[i].rest;
+    let author = '';
+    const dashMatch = title.match(/^(.*?)\s+—\s+(.*)$/);
+    if(dashMatch){ title = dashMatch[1].trim(); author = dashMatch[2].trim(); }
+    const bodyLines = lines.slice(start+1, end).filter(l => !/^\s*\d{1,3}\s*$/.test(l));
+    songs.push({number: confirmed[i].num, title, author, lines: bodyLines});
+  }
+
+  window.parsedSongs = songs;
+  window.currentBookId = null;
+
+  if(songs.length===0){
+    document.getElementById('parseResult').innerHTML =
+      '<div class="warn">No se encontraron canciones. Cada una debe empezar con «01. Título — Autor» y seguir con líneas de acordes.</div>';
+    document.getElementById('step2').style.display='none';
+    return;
+  }
+
+  const nameGuess = window.pendingBookName || ('Cancionero ' + new Date().toLocaleDateString());
+  window.pendingBookName = null;
+
+  finishParse(`<p class="ok"><b>${songs.length} canciones</b> encontradas.</p>
+     <details><summary>Ver la lista</summary>
+       <div class="songIndexList">${songs.map(s=>`${s.number}. ${escapeHtml(s.title)}`).join('<br>')}</div>
+     </details>
+     <div class="row" style="margin-top:12px;align-items:center">
+       <div><input type="text" id="bookNameInput" value="${escapeHtml(nameGuess)}" placeholder="Nombre para guardar este cancionero"></div>
+       <div style="flex:0"><button class="secondary" onclick="saveCurrentAsBook(document.getElementById('bookNameInput').value.trim() || 'Cancionero')">Guardar cancionero</button></div>
+     </div>`);
+}
+
+function finishParse(resultHtml){
+  const songs = window.parsedSongs;
+  const select = document.getElementById('globalKey');
+  select.innerHTML = '<option value="">No transponer</option>' +
+    NOTES_COMMON.map(n=>`<option value="${n}">${n}</option>`).join('');
+
+  document.getElementById('parseResult').innerHTML = resultHtml;
+  document.getElementById('step2').style.display = songs.length ? 'block' : 'none';
+  renderActiveBookBanner();
+}
+
+// ---------- Step 2: build the set ----------
+function addByNumbers(){
+  const raw = document.getElementById('songNumbers').value;
+  const nums = (raw.match(/\d+/g) || []).map(Number);
+  const globalKey = document.getElementById('globalKey').value;
+  const section = document.getElementById('sectionInput').value.trim() || 'General';
+  let notFound = [];
+
+  nums.forEach(n=>{
+    const song = window.parsedSongs.find(s=>s.number===n);
+    if(!song){ notFound.push(n); return; }
+    let originalKey = '';
+    for(const l of song.lines){
+      if(isChordLine(l)){
+        const m = chordsIn(l);
+        if(m.length){ originalKey = m[0].m; break; }
+      }
+    }
+    window.selection.push({custom:false, song, originalKey, targetKey: globalKey, section});
+  });
+
+  document.getElementById('songNumbers').value = '';
+  renderSelectionList();
+  if(notFound.length){
+    document.getElementById('songList').insertAdjacentHTML('afterbegin',
+      `<div class="warn">No están en el cancionero: ${notFound.join(', ')}</div>`);
+  }
+}
+
+function addCustomSong(){
+  const title = document.getElementById('customTitle').value.trim();
+  const lyrics = document.getElementById('customLyrics').value;
+  const section = document.getElementById('sectionInput').value.trim() || 'General';
+  if(!title && !lyrics.trim()){ return; }
+  window.selection.push({custom:true, title: title || 'Sin título', lines: lyrics.split(/\r?\n/), section});
+  saveToCustomLibrary(title || 'Sin título', lyrics);
+  document.getElementById('customTitle').value = '';
+  document.getElementById('customLyrics').value = '';
+  renderSelectionList();
+}
+
+function removeItem(index){
+  window.selection.splice(index,1);
+  renderSelectionList();
+}
+
+function updateTarget(index, value){
+  if(window.selection[index]) window.selection[index].targetKey = value;
+}
+
+function updateSection(index, value){
+  if(window.selection[index]) window.selection[index].section = value.trim() || 'General';
+  renderSelectionList();
+}
+
+function moveItem(index, dir){
+  const target = index + dir;
+  if(target < 0 || target >= window.selection.length) return;
+  const [item] = window.selection.splice(index, 1);
+  window.selection.splice(target, 0, item);
+  renderSelectionList();
+}
+
+function refreshSectionOptions(){
+  const sections = [...new Set(window.selection.map(i=>i.section || 'General'))];
+  document.getElementById('sectionOptions').innerHTML =
+    sections.map(s=>`<option value="${escapeHtml(s)}"></option>`).join('');
+}
+
+const ICON_UP = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M18 15l-6-6-6 6"/></svg>';
+const ICON_DOWN = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg>';
+
+function reorderButtons(idx){
+  return `<div class="reorderCol">
+    <button class="small secondary" ${idx===0?'disabled':''} onclick="moveItem(${idx},-1)" title="Subir">${ICON_UP}</button>
+    <button class="small secondary" ${idx===window.selection.length-1?'disabled':''} onclick="moveItem(${idx},1)" title="Bajar">${ICON_DOWN}</button>
+  </div>`;
+}
+
+function sectionField(idx, section){
+  return `<input type="text" class="sectionTag" value="${escapeHtml(section||'General')}"
+    onchange="updateSection(${idx}, this.value)" list="sectionOptions">`;
+}
+
+function renderSelectionList(){
+  let html = '';
+  window.selection.forEach((item, idx)=>{
+    if(item.custom){
+      html += `<div class="songRow">
+        ${reorderButtons(idx)}
+        <div class="info"><span class="title">${escapeHtml(item.title)}</span> <span class="author">· sin acordes</span>
+          <div class="meta">Sección ${sectionField(idx, item.section)}</div>
+        </div>
+        <button class="danger" onclick="removeItem(${idx})">Quitar</button>
+      </div>`;
+    } else {
+      const {song, originalKey, targetKey} = item;
+      html += `<div class="songRow">
+        ${reorderButtons(idx)}
+        <div class="info">
+          <span class="num">${song.number}</span><span class="title">${escapeHtml(song.title)}</span>${song.author?(' <span class="author">· '+escapeHtml(song.author)+'</span>'):''}
+          <div class="meta">
+            <span>Tono <b>${originalKey||'?'}</b></span>
+            <span>Cambiar a
+            <select onchange="updateTarget(${idx}, this.value)" aria-label="Nuevo tono">
+              <option value="" ${!targetKey?'selected':''}>Sin cambio</option>
+              ${NOTES_COMMON.map(note=>`<option value="${note}" ${targetKey===note?'selected':''}>${note}</option>`).join('')}
+            </select></span>
+            <span>Sección ${sectionField(idx, item.section)}</span>
+          </div>
+        </div>
+        <button class="danger" onclick="removeItem(${idx})">Quitar</button>
+      </div>`;
+    }
+  });
+  document.getElementById('songList').innerHTML = html;
+  document.getElementById('step3').style.display = window.selection.length ? 'block' : 'none';
+  refreshSectionOptions();
+}
+
+// ---------- Step 3: generate ----------
+// Each song is kept as a list of {chord, text} lines (already transposed), so the
+// sheet can be re-wrapped to any width without touching the songbook data.
+function renderLines(lines, semitones, notation){
+  const out = lines.map(l=>{
+    if(l === '') return {chord:false, text:''};
+    if(isChordLine(l)) return {chord:true, text: transposeLine(l, semitones, notation||'latin')};
+    return {chord:false, text:l};
+  });
+  window.sheetLines.push(out);
+  return linesToHtml(out);
+}
+
+function linesToHtml(lines){
+  return lines.map(l=> l.text==='' ? '' :
+    `<span class="${l.chord?'chord':'lyric'}">${escapeHtml(l.text)}</span>`).join('\n');
+}
+
+// Where a line can be cut at column b: between words of the lyric and never through
+// the middle of a chord.
+function okBreak(text, b){
+  if(b >= text.length) return true;
+  return text[b]===' ' || (b>0 && text[b-1]===' ');
+}
+
+function findBreak(rows, width){
+  for(let b=width; b>=Math.floor(width*0.4); b--){
+    if(rows.every(t=>okBreak(t,b))) return b;
+  }
+  for(let b=width; b>=Math.floor(width*0.4); b--){
+    if(okBreak(rows[rows.length-1],b)) return b; // at least don't split a lyric word
+  }
+  return width;
+}
+
+// Wraps a group of rows that must stay aligned (a chord line + the lyric under it):
+// all rows are cut at the same column, and continuation rows get the same indent,
+// so every chord keeps sitting over its syllable.
+function wrapGroup(rows, width){
+  const out = rows.map(()=>[]);
+  const INDENT = '  ';
+  let first = true;
+  while(true){
+    const avail = first ? width : width - INDENT.length;
+    if(Math.max(...rows.map(r=>r.length)) <= avail){
+      rows.forEach((r,k)=>out[k].push((first?'':INDENT)+r));
+      break;
+    }
+    const b = findBreak(rows, avail);
+    rows.forEach((r,k)=>out[k].push(((first?'':INDENT)+r.slice(0,b)).trimEnd()));
+    rows = rows.map(r=>r.slice(b));
+    // drop the leading blanks shared by all rows (keeps their relative alignment)
+    const lead = Math.min(...rows.filter(r=>r.trim()).map(r=>r.match(/^ */)[0].length));
+    if(isFinite(lead)) rows = rows.map(r=>r.slice(lead));
+    if(rows.every(r=>!r.trim())) break;
+    first = false;
+  }
+  // interleave: chord piece, lyric piece, chord piece, lyric piece...
+  const res = [];
+  for(let i=0;i<out[0].length;i++) out.forEach((o,k)=>{ if(o[i]!==undefined && o[i].trim()) res.push({k, text:o[i]}); });
+  return res;
+}
+
+function wrapLines(lines, width){
+  const res = [];
+  for(let i=0;i<lines.length;i++){
+    const l = lines[i], next = lines[i+1];
+    if(l.text.length <= width && !(l.chord && next && !next.chord && next.text && next.text.length > width)){
+      res.push(l); continue;
+    }
+    if(l.chord && next && !next.chord && next.text.trim()){
+      wrapGroup([l.text, next.text], width).forEach(p=>res.push({chord: p.k===0, text:p.text}));
+      i++;
+    } else {
+      wrapGroup([l.text], width).forEach(p=>res.push({chord: l.chord, text:p.text}));
+    }
+  }
+  return res;
+}
+
+function generatePreview(){
+  window.sheetLines = [];
+  const notationSelect = document.getElementById('displayNotationSelect');
+  const notation = notationSelect ? notationSelect.value : window.displayNotation;
+  window.displayNotation = notation;
+
+  const today = new Date().toLocaleDateString('es-CL',{weekday:'long', day:'numeric', month:'long', year:'numeric'});
+  let html = `<div class="sheet-head"><p class="sheet-brand">BETEL</p><p class="sheet-sub">${today}</p></div>`;
+  let lastSection = null;
+
+  const sections = new Set(window.selection.map(i=>i.section || 'General'));
+  const showSections = sections.size > 1 || !sections.has('General');
+
+  window.selection.forEach(item=>{
+    const section = item.section || 'General';
+    if(showSections && section !== lastSection){
+      html += `<div class="section-title">${escapeHtml(section)}</div>`;
+      lastSection = section;
+    }
+
+    if(item.custom){
+      html += `<article class="song-block">
+        <header class="song-head"><span class="n"></span><h3>${escapeHtml(item.title)}</h3></header>
+        <pre>${renderLines(item.lines, 0, notation)}</pre>
+      </article>`;
+      return; // custom songs never transpose, but chords still re-notate to the chosen display
+    }
+
+    const {song, originalKey, targetKey} = item;
+    let semitones = 0;
+    if(targetKey && originalKey){
+      const rootMatch = originalKey.match(new RegExp('^('+ROOTS+')(#|b)?'));
+      const oi = rootMatch ? noteIndex(rootMatch[0]) : -1;
+      const ti = noteIndex(targetKey);
+      if(oi!==-1 && ti!==-1){
+        let diff = ti - oi;
+        if(diff > 6) diff -= 12;
+        if(diff < -6) diff += 12;
+        semitones = diff;
+      }
+    }
+
+    const shownKey = originalKey ? transposeLine(originalKey, semitones, notation||'latin') : '';
+    html += `<article class="song-block">
+      <header class="song-head">
+        <span class="n">${song.number}</span>
+        <h3>${escapeHtml(song.title)}${song.author?(` <span class="by">${escapeHtml(song.author)}</span>`):''}</h3>
+        ${shownKey ? `<span class="key">Tono ${escapeHtml(shownKey)}</span>` : ''}
+      </header>
+      ${semitones!==0 ? `<div class="key-note no-print">Transportada ${semitones>0?'+':''}${semitones} semitonos, desde ${originalKey}</div>` : ''}
+      <pre>${renderLines(song.lines, semitones, notation)}</pre>
+    </article>`;
+  });
+
+  document.getElementById('preview').innerHTML = `<div class="sheet">${html}</div>`;
+  fitSheets();
+}
+
+// All songs use the same font size. A line that doesn't fit is split into two rows,
+// cutting the chord line and its lyric at the same column (see wrapLines).
+// The sheet on screen has the width of the printed page, so screen and paper match.
+const PRINT_WIDTH_PX = 680; // A4/Carta minus 14 mm margins on each side
+
+function charWidth(pre){
+  const probe = document.createElement('span');
+  probe.textContent = 'M'.repeat(40);
+  probe.style.visibility = 'hidden';
+  pre.appendChild(probe);
+  const w = probe.getBoundingClientRect().width / 40;
+  probe.remove();
+  return w || 8;
+}
+
+function fitSheets(widthPx){
+  const pres = document.querySelectorAll('#preview pre');
+  pres.forEach((pre,k)=>{
+    const lines = (window.sheetLines||[])[k];
+    if(!lines) return;
+    pre.style.fontSize = '';
+    const avail = typeof widthPx === 'number' ? Math.min(widthPx, pre.clientWidth || widthPx) : pre.clientWidth;
+    const cols = Math.max(20, Math.floor(avail / charWidth(pre)) - 1);
+    pre.innerHTML = linesToHtml(wrapLines(lines, cols));
+  });
+}
+window.addEventListener('resize', ()=>fitSheets());
+window.addEventListener('beforeprint', ()=>fitSheets(PRINT_WIDTH_PX));
+window.addEventListener('afterprint', ()=>fitSheets());
+
+// ---------- Sheet style (font, size, colors) ----------
+const STYLE_KEY = 'cancionero_style_v1';
+const STYLE_DEFAULT = {
+  font: "'Courier Prime', 'Courier New', monospace",
+  size: 14,
+  lyric: '#22262E',
+  chord: '#8A2D3A'
+};
+const LYRIC_SWATCHES = [['#22262E','Tinta'],['#000000','Negro'],['#1C2738','Azul noche'],['#3D4A3A','Verde oliva'],['#4A3B33','Café']];
+const CHORD_SWATCHES = [['#8A2D3A','Vino'],['#C0392B','Rojo'],['#1F5FAD','Azul'],['#1E7A5A','Verde'],['#A8741A','Dorado'],['#6B3FA0','Morado'],['#000000','Negro']];
+
+function loadSheetStyle(){
+  try{ return Object.assign({}, STYLE_DEFAULT, JSON.parse(localStorage.getItem(STYLE_KEY)) || {}); }
+  catch(e){ return Object.assign({}, STYLE_DEFAULT); }
+}
+
+function saveSheetStyle(st){
+  try{ localStorage.setItem(STYLE_KEY, JSON.stringify(st)); }catch(e){}
+}
+
+function colorControl(kind, swatches, current){
+  return swatches.map(([hex,name])=>
+    `<button type="button" class="swatch" style="background:${hex}" title="${name}" aria-label="${name}"
+       aria-pressed="${current.toLowerCase()===hex.toLowerCase()}" onclick="setSheetStyle('${kind}','${hex}')"></button>`
+  ).join('') +
+  `<input type="color" value="${current}" title="Otro color" aria-label="Otro color"
+     oninput="setSheetStyle('${kind}', this.value)">`;
+}
+
+function applySheetStyle(st){
+  const pv = document.getElementById('preview');
+  pv.style.setProperty('--song-font', st.font);
+  pv.style.setProperty('--song-size', st.size + 'px');
+  pv.style.setProperty('--lyric-color', st.lyric);
+  pv.style.setProperty('--chord-color', st.chord);
+  const fontSel = document.getElementById('songFont');
+  if([...fontSel.options].some(o=>o.value===st.font)) fontSel.value = st.font;
+  document.getElementById('songSize').value = st.size;
+  document.getElementById('songSizeOut').textContent = st.size + ' px';
+  document.getElementById('lyricColors').innerHTML = colorControl('lyric', LYRIC_SWATCHES, st.lyric);
+  document.getElementById('chordColors').innerHTML = colorControl('chord', CHORD_SWATCHES, st.chord);
+}
+
+function setSheetStyle(key, value){
+  const st = loadSheetStyle();
+  st[key] = key==='size' ? parseFloat(value) : value;
+  saveSheetStyle(st);
+  if(key==='lyric' || key==='chord'){
+    // keep the native color picker open while dragging: only refresh the variables and swatches state
+    const pv = document.getElementById('preview');
+    pv.style.setProperty(key==='lyric' ? '--lyric-color' : '--chord-color', value);
+    document.querySelectorAll(`#${key}Colors .swatch`).forEach(b=>
+      b.setAttribute('aria-pressed', b.style.background && rgbToHex(b.style.background)===value.toLowerCase()));
+    const picker = document.querySelector(`#${key}Colors input[type=color]`);
+    if(picker && document.activeElement!==picker) picker.value = value;
+    return;
+  }
+  applySheetStyle(st);
+  fitSheets();
+  // a new font may still be downloading: refit once it has arrived
+  if(key==='font' && document.fonts && document.fonts.load){
+    Promise.all([document.fonts.load('400 14px '+value), document.fonts.load('700 14px '+value)])
+      .then(()=>fitSheets(), ()=>fitSheets());
+  }
+}
+
+function rgbToHex(rgb){
+  const m = rgb.match(/\d+/g);
+  if(!m) return rgb.toLowerCase();
+  return '#' + m.slice(0,3).map(n=>(+n).toString(16).padStart(2,'0')).join('');
+}
+
+function resetSheetStyle(){
+  saveSheetStyle(STYLE_DEFAULT);
+  applySheetStyle(Object.assign({}, STYLE_DEFAULT));
+  fitSheets();
+}
+
+// ---------- Init ----------
+applySheetStyle(loadSheetStyle());
+renderBooksList();
+renderCustomLibrary();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
